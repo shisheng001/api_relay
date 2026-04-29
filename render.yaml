@@ -1,5 +1,5 @@
 # Render Blueprint - api_relay
-# 部署命令: render blueprint create render.yaml
+# 部署: render blueprint create render.yaml
 
 services:
   - type: web
@@ -8,12 +8,13 @@ services:
     region: singapore
     plan: free
     dockerfilePath: ./Dockerfile
-    healthCheckPath: /
+    dockerContext: .
+    healthCheckPath: /health
     envVars:
       - key: PROVIDER
         value: siliconflow
       - key: SF_API_KEY
-        sync: false  # 需要手动填写：硅基流动 API Key
+        sync: false
       - key: SECRET_KEY
         generateValue: true
       - key: PORT
