@@ -1,0 +1,27 @@
+name: Deploy to Render via Blueprint
+
+on:
+  workflow_dispatch:
+    inputs:
+      render_api_key:
+        description: 'Render API Key (rnd_xxx)'
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Render Blueprint
+        run: |
+          curl -X POST "https://api.render.com/v1/blueprints" \
+            -H "Authorization: Bearer ${{ inputs.render_api_key }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "repo": "https://github.com/shisheng001/api_relay",
+              "branch": "main",
+              "serviceDetails": {
+                "region": "singapore",
+                "plan": "free"
+              }
+            }'
