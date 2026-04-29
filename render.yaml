@@ -5,17 +5,15 @@ services:
   - type: web
     name: api-relay
     env: docker
-    region: singapore  # 离大陆近
+    region: singapore
     plan: free
     dockerfilePath: ./Dockerfile
     healthCheckPath: /
     envVars:
       - key: PROVIDER
-        value: bailian
-      - key: BAILIAN_API_KEY
-        sync: false  # 需要手动填写
-      - key: BAILIAN_API_BASE
-        value: https://dashscope.aliyuncs.com/compatible-mode/v1
+        value: siliconflow
+      - key: SF_API_KEY
+        sync: false  # 需要手动填写：硅基流动 API Key
       - key: SECRET_KEY
         generateValue: true
       - key: PORT
