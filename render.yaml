@@ -1,0 +1,22 @@
+# Render Blueprint - api_relay
+# 部署命令: render blueprint create render.yaml
+
+services:
+  - type: web
+    name: api-relay
+    env: docker
+    region: singapore  # 离大陆近
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
+    envVars:
+      - key: PROVIDER
+        value: bailian
+      - key: BAILIAN_API_KEY
+        sync: false  # 需要手动填写
+      - key: BAILIAN_API_BASE
+        value: https://dashscope.aliyuncs.com/compatible-mode/v1
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PORT
+        value: 8000
