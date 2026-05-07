@@ -260,6 +260,7 @@
     <div>
         <a href="#pricing">价格</a>
         <a href="#docs">文档</a>
+        <a href="/recharge">充值</a>
         <a href="/admin">管理后台</a>
     </div>
 </nav>
@@ -283,7 +284,7 @@
     </div>
     <div class="stat-item">
         <div class="stat-num">3元</div>
-        <div class="stat-label">qwen-turbo 每百万token</div>
+        <div class="stat-label">DeepSeek-V3 每百万token</div>
     </div>
     <div class="stat-item">
         <div class="stat-num">0</div>
@@ -302,52 +303,52 @@
     <div class="pricing-grid">
         <div class="price-card popular">
             <div class="popular-tag">最受欢迎</div>
-            <div class="model-name">qwen-turbo</div>
+            <div class="model-name">DeepSeek-V3</div>
             <div class="price-row">
                 <span class="label">输入</span>
                 <span class="value">3 元/M tokens</span>
             </div>
             <div class="price-row">
                 <span class="label">输出</span>
+                <span class="value">9 元/M tokens</span>
+            </div>
+            <div class="price-note">最强推理模型，日常对话/代码/RAG首选</div>
+        </div>
+        <div class="price-card">
+            <div class="model-name">DeepSeek-R1</div>
+            <div class="price-row">
+                <span class="label">输入</span>
                 <span class="value">6 元/M tokens</span>
             </div>
-            <div class="price-note">速度快，日常对话/RAG/工具调用首选</div>
+            <div class="price-row">
+                <span class="label">输出</span>
+                <span class="value">18 元/M tokens</span>
+            </div>
+            <div class="price-note">深度推理模型，适合复杂问题分析</div>
         </div>
         <div class="price-card">
-            <div class="model-name">qwen-plus</div>
+            <div class="model-name">Qwen2.5-72B</div>
             <div class="price-row">
                 <span class="label">输入</span>
-                <span class="value">10 元/M tokens</span>
+                <span class="value">4 元/M tokens</span>
             </div>
             <div class="price-row">
                 <span class="label">输出</span>
-                <span class="value">25 元/M tokens</span>
+                <span class="value">12 元/M tokens</span>
             </div>
-            <div class="price-note">能力更强，适合复杂推理与长文本</div>
+            <div class="price-note">阿里千问大模型，能力强速度快</div>
         </div>
         <div class="price-card">
-            <div class="model-name">qwen-max</div>
+            <div class="model-name">Qwen2.5-7B</div>
             <div class="price-row">
                 <span class="label">输入</span>
-                <span class="value">80 元/M tokens</span>
+                <span class="value">1 元/M tokens</span>
             </div>
             <div class="price-row">
                 <span class="label">输出</span>
-                <span class="value">200 元/M tokens</span>
+                <span class="value">3 元/M tokens</span>
             </div>
-            <div class="price-note">旗舰模型，媲美 GPT-4o</div>
-        </div>
-        <div class="price-card">
-            <div class="model-name">qwen-coder-plus</div>
-            <div class="price-row">
-                <span class="label">输入</span>
-                <span class="value">35 元/M tokens</span>
-            </div>
-            <div class="price-row">
-                <span class="label">输出</span>
-                <span class="value">90 元/M tokens</span>
-            </div>
-            <div class="price-note">代码专项模型，写代码/调试首选</div>
+            <div class="price-note">轻量快速，低成本日常使用</div>
         </div>
     </div>
 </section>
@@ -396,7 +397,7 @@
 
 client = OpenAI(
     api_key=<span class="str">"sk-relay-你的key"</span>,  <span class="comment"># 注册后获取</span>
-    base_url=<span class="str">"https://stones-guns-waterproof-saying.trycloudflare.com/v1"</span>
+    base_url=<span class="str">"https://api-relay.shisheng001.koyeb.app/v1"</span>
 )
 
 response = client.<span class="fn">chat.completions.create</span>(
@@ -406,7 +407,7 @@ response = client.<span class="fn">chat.completions.create</span>(
 <span class="fn">print</span>(response.choices[<span class="num">0</span>].message.content)</pre>
         </div>
         <div id="tab-curl" style="display:none">
-<pre><span class="kw">curl</span> https://stones-guns-waterproof-saying.trycloudflare.com/v1/chat/completions \
+<pre><span class="kw">curl</span> https://api-relay.shisheng001.koyeb.app/v1/chat/completions \
   -H <span class="str">"Authorization: Bearer sk-relay-你的key"</span> \
   -H <span class="str">"Content-Type: application/json"</span> \
   -d <span class="str">'{
@@ -419,7 +420,7 @@ response = client.<span class="fn">chat.completions.create</span>(
 
 <span class="kw">const</span> client = <span class="kw">new</span> <span class="fn">OpenAI</span>({
   apiKey: <span class="str">'sk-relay-你的key'</span>,
-  baseURL: <span class="str">'https://stones-guns-waterproof-saying.trycloudflare.com/v1'</span>
+  baseURL: <span class="str">'https://api-relay.shisheng001.koyeb.app/v1'</span>
 });
 
 <span class="kw">const</span> res = <span class="kw">await</span> client.chat.completions.<span class="fn">create</span>({
@@ -444,7 +445,7 @@ console.<span class="fn">log</span>(res.choices[<span class="num">0</span>].mess
         <div id="register-result" class="result-box">
             <div style="font-size:14px;margin-bottom:8px;color:#8888aa;">你的 API Key（请妥善保存）：</div>
             <div class="result-key" id="api-key-display"></div>
-            <div class="result-hint">Base URL：<code style="color:#6c63ff">https://stones-guns-waterproof-saying.trycloudflare.com/v1</code></div>
+            <div class="result-hint">Base URL：<code style="color:#6c63ff">https://api-relay.shisheng001.koyeb.app/v1</code></div>
             <div class="result-hint" style="margin-top:6px">余额：<span style="color:#00b894;font-weight:600">5.00 元</span> 已到账</div>
             <button class="copy-btn" onclick="copyKey()">复制 Key</button>
         </div>

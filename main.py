@@ -462,6 +462,10 @@ async def admin_page():
 async def user_page():
     return _read_template("user.html")
 
+@app.get("/recharge", response_class=HTMLResponse)
+async def recharge_page():
+    return _read_template("recharge.html")
+
 # ==================== 其他 ====================
 @app.get("/health")
 async def health():

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>账户充值 - API中转站</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+            background: #0a0a1a;
+            color: #e8e8ff;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container { max-width: 600px; margin: 0 auto; }
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 40px;
+        }
+        .logo { font-size: 20px; font-weight: 700; color: #6c63ff; }
+        .logo span { color: #e8e8ff; }
+        nav a { color: #8888aa; text-decoration: none; }
+        nav a:hover { color: #e8e8ff; }
+
+        h1 { font-size: 28px; margin-bottom: 10px; }
+        .subtitle { color: #8888aa; margin-bottom: 40px; }
+
+        .step {
+            background: #13132a;
+            border: 1px solid #2a2a4a;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .step-title {
+            display: flex; align-items: center; gap: 12px;
+            font-size: 18px; font-weight: 600; margin-bottom: 20px;
+        }
+        .step-num {
+            background: #6c63ff;
+            color: white;
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 700;
+        }
+
+        .input-group {
+            display: flex; gap: 12px;
+        }
+        .input-group input {
+            flex: 1; padding: 14px 18px; border-radius: 10px;
+            border: 1px solid #2a2a4a; background: #0a0a1a;
+            color: #e8e8ff; font-size: 15px; outline: none;
+        }
+        .input-group input:focus { border-color: #6c63ff; }
+        .input-group input::placeholder { color: #8888aa; }
+
+        .amount-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 20px; }
+        .amount-btn {
+            padding: 14px 8px; border-radius: 10px;
+            border: 1px solid #2a2a4a; background: transparent;
+            color: #e8e8ff; font-size: 15px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .amount-btn:hover, .amount-btn.selected {
+            border-color: #6c63ff;
+            background: rgba(108,99,255,0.15);
+            color: #6c63ff;
+        }
+        .amount-btn input { display: none; }
+
+        .custom-amount {
+            margin-top: 12px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .custom-amount input {
+            width: 120px; padding: 10px 14px; border-radius: 8px;
+            border: 1px solid #2a2a4a; background: #0a0a1a;
+            color: #e8e8ff; font-size: 15px; outline: none;
+        }
+        .custom-amount input:focus { border-color: #6c63ff; }
+
+        .qr-section {
+            display: flex; gap: 20px; justify-content: center; margin-top: 20px;
+        }
+        .qr-box {
+            text-align: center; flex: 1; max-width: 200px;
+        }
+        .qr-box img {
+            width: 160px; height: 160px; border-radius: 12px;
+            border: 2px dashed #2a2a4a;
+        }
+        .qr-label { margin-top: 10px; font-size: 14px; color: #8888aa; }
+
+        .payment-methods { display: flex; gap: 16px; margin-bottom: 20px; }
+        .pay-btn {
+            flex: 1; padding: 16px; border-radius: 12px;
+            border: 1px solid #2a2a4a; background: transparent;
+            cursor: pointer; text-align: center; transition: all 0.2s;
+        }
+        .pay-btn:hover, .pay-btn.selected {
+            border-color: #6c63ff;
+            background: rgba(108,99,255,0.15);
+        }
+        .pay-btn .icon { font-size: 32px; margin-bottom: 8px; }
+        .pay-btn .name { font-size: 14px; color: #e8e8ff; font-weight: 600; }
+
+        .warning {
+            background: rgba(255,190,114,0.1);
+            border: 1px solid rgba(255,190,114,0.3);
+            border-radius: 12px;
+            padding: 16px;
+            color: #ffbe76;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-top: 20px;
+        }
+
+        .submit-btn {
+            width: 100%; padding: 18px; border-radius: 12px;
+            background: #6c63ff; color: white;
+            border: none; font-size: 16px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; margin-top: 20px;
+        }
+        .submit-btn:hover { background: #5a52e0; transform: translateY(-2px); }
+        .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .success-box {
+            background: rgba(0,184,148,0.1);
+            border: 1px solid rgba(0,184,148,0.3);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            display: none;
+        }
+        .success-box.show { display: block; }
+        .success-icon { font-size: 64px; margin-bottom: 20px; }
+        .success-title { font-size: 24px; font-weight: 700; color: #00b894; margin-bottom: 12px; }
+        .success-text { color: #8888aa; font-size: 15px; line-height: 1.8; }
+
+        .order-box {
+            background: #0a0a1a;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            display: none;
+        }
+        .order-box.show { display: block; }
+        .order-id { font-family: monospace; font-size: 12px; color: #8888aa; margin-top: 8px; }
+        .order-amount { font-size: 32px; font-weight: 800; color: #00b894; margin: 12px 0; }
+        .order-hint { font-size: 13px; color: #8888aa; line-height: 1.8; text-align: left; }
+
+        .toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: #2d3436; color: white; padding: 15px 30px;
+            border-radius: 50px; opacity: 0; transition: opacity 0.3s; z-index: 1000;
+        }
+        .toast.show { opacity: 1; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <nav>
+        <div class="logo">极简<span>API</span></div>
+        <a href="/">返回首页</a>
+    </nav>
+
+    <h1>账户充值</h1>
+    <p class="subtitle">扫码支付，余额实时到账</p>
+
+    <!-- Step 1: 输入API Key -->
+    <div class="step" id="step1">
+        <div class="step-title">
+            <div class="step-num">1</div>
+            输入你的 API Key
+        </div>
+        <div class="input-group">
+            <input type="text" id="apiKeyInput" placeholder="sk-relay-xxxxxxxxxxxx" value="">
+        </div>
+        <p style="color:#8888aa;font-size:13px;margin-top:10px;">
+            登录后访问 <a href="/user" style="color:#6c63ff">用户中心</a> 获取你的 API Key
+        </p>
+    </div>
+
+    <!-- Step 2: 选择金额 -->
+    <div class="step" id="step2">
+        <div class="step-title">
+            <div class="step-num">2</div>
+            选择充值金额
+        </div>
+        <div class="amount-grid">
+            <label class="amount-btn"><input type="radio" name="amount" value="10"> ¥10</label>
+            <label class="amount-btn"><input type="radio" name="amount" value="30"> ¥30</label>
+            <label class="amount-btn"><input type="radio" name="amount" value="50"> ¥50</label>
+            <label class="amount-btn"><input type="radio" name="amount" value="100" checked> ¥100</label>
+            <label class="amount-btn"><input type="radio" name="amount" value="200"> ¥200</label>
+            <label class="amount-btn"><input type="radio" name="amount" value="500"> ¥500</label>
+            <label class="amount-btn"><input type="radio" name="amount" value="1000"> ¥1000</label>
+        </div>
+        <div class="custom-amount">
+            <span style="color:#8888aa;font-size:14px;">自定义：¥</span>
+            <input type="number" id="customAmount" placeholder="输入金额" min="1" max="10000">
+        </div>
+    </div>
+
+    <!-- Step 3: 支付方式 -->
+    <div class="step" id="step3">
+        <div class="step-title">
+            <div class="step-num">3</div>
+            选择支付方式
+        </div>
+        <div class="payment-methods">
+            <div class="pay-btn selected" id="pay-wechat" onclick="selectPay('wechat')">
+                <div class="icon">💬</div>
+                <div class="name">微信支付</div>
+            </div>
+            <div class="pay-btn" id="pay-alipay" onclick="selectPay('alipay')">
+                <div class="icon">💙</div>
+                <div class="name">支付宝</div>
+            </div>
+        </div>
+
+        <!-- 微信收款码 -->
+        <div id="qr-wechat" class="qr-section">
+            <div class="qr-box">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=weixin://qr/p/placeholder" alt="微信支付" id="wechat-qr">
+                <div class="qr-label">💬 微信扫码支付</div>
+            </div>
+        </div>
+        <!-- 支付宝收款码 -->
+        <div id="qr-alipay" class="qr-section" style="display:none">
+            <div class="qr-box">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=alipay://qr/placeholder" alt="支付宝" id="alipay-qr">
+                <div class="qr-label">💙 支付宝扫码支付</div>
+            </div>
+        </div>
+
+        <div class="warning">
+            ⚠️ <strong>重要：</strong>支付完成后，请联系客服微信 <strong>ai relay2026</strong> 或在 <a href="https://work.weixin.qq.com/" style="color:#ffbe76">企业微信</a> 发送付款截图，备注你的 API Key，客服会在1小时内为你充值。
+        </div>
+    </div>
+
+    <!-- 提交按钮 -->
+    <button class="submit-btn" id="submitBtn" onclick="copyOrderInfo()">
+        📋 复制充值信息
+    </button>
+
+    <!-- 成功提示 -->
+    <div class="success-box" id="successBox">
+        <div class="success-icon">✅</div>
+        <div class="success-title">充值信息已复制</div>
+        <div class="success-text">
+            请用微信/支付宝扫描上方二维码付款，<br>
+            然后联系客服确认充值到账。
+        </div>
+    </div>
+
+    <!-- 订单信息（隐藏，供复制） -->
+    <div class="order-box" id="orderBox">
+        <div style="font-size:14px;color:#8888aa;">充值金额</div>
+        <div class="order-amount" id="orderAmount">¥100</div>
+        <div class="order-hint">
+            1. 扫描上方二维码付款<br>
+            2. 付款后联系客服微信 <strong>ai_relay2026</strong><br>
+            3. 发送付款截图 + API Key<br>
+            4. 余额将在1小时内到账
+        </div>
+        <div class="order-id" id="orderId"></div>
+    </div>
+</div>
+
+<div class="toast" id="toast">已复制</div>
+
+<script>
+// 从 localStorage 读取 API Key
+document.getElementById('apiKeyInput').value = localStorage.getItem('apiKey') || '';
+
+let selectedAmount = 100;
+let selectedPay = 'wechat';
+
+// 金额选择
+document.querySelectorAll('.amount-btn input').forEach(input => {
+    input.addEventListener('change', () => {
+        selectedAmount = parseInt(input.value);
+        document.getElementById('customAmount').value = '';
+        updateAmountUI();
+    });
+    if (input.checked) {
+        selectedAmount = parseInt(input.value);
+        updateAmountUI();
+    }
+});
+
+document.getElementById('customAmount').addEventListener('input', (e) => {
+    const val = parseInt(e.target.value);
+    if (val > 0) {
+        selectedAmount = val;
+        document.querySelectorAll('.amount-btn input').forEach(i => i.checked = false);
+        updateAmountUI();
+    }
+});
+
+function updateAmountUI() {
+    document.querySelectorAll('.amount-btn').forEach(btn => btn.classList.remove('selected'));
+    document.querySelectorAll('.amount-btn input').forEach(input => {
+        if (parseInt(input.value) === selectedAmount) {
+            input.checked = true;
+            input.closest('.amount-btn').classList.add('selected');
+        }
+    });
+}
+updateAmountUI();
+
+// 支付方式
+function selectPay(method) {
+    selectedPay = method;
+    document.getElementById('pay-wechat').classList.toggle('selected', method === 'wechat');
+    document.getElementById('pay-alipay').classList.toggle('selected', method === 'alipay');
+    document.getElementById('qr-wechat').style.display = method === 'wechat' ? 'flex' : 'none';
+    document.getElementById('qr-alipay').style.display = method === 'alipay' ? 'flex' : 'none';
+}
+
+// 复制充值信息
+function copyOrderInfo() {
+    const apiKey = document.getElementById('apiKeyInput').value.trim();
+    if (!apiKey) {
+        showToast('请先输入 API Key');
+        return;
+    }
+    localStorage.setItem('apiKey', apiKey);
+
+    const orderId = 'R' + Date.now();
+    document.getElementById('orderAmount').textContent = '¥' + selectedAmount;
+    document.getElementById('orderId').textContent = '订单号: ' + orderId;
+
+    const info = `【API中转站充值】
+金额：¥${selectedAmount}
+API Key：${apiKey}
+订单号：${orderId}
+
+支付方式：${selectedPay === 'wechat' ? '微信支付' : '支付宝'}
+请扫码付款后，联系客服微信 ai_relay2026 确认充值到账。`;
+
+    navigator.clipboard.writeText(info).then(() => {
+        document.getElementById('orderBox').classList.add('show');
+        document.getElementById('successBox').classList.add('show');
+        document.getElementById('submitBtn').style.display = 'none';
+        showToast('充值信息已复制！');
+    });
+}
+
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+}
+</script>
+</body>
+</html>
